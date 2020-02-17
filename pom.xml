@@ -1,0 +1,76 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.com.pscs</groupId>
+  <artifactId>SistemaTeste</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <build>
+  <finalName>SistemaTeste</finalName>
+  <plugins>
+	  <plugin>
+	  	<artifactId>maven-war-plugin</artifactId>
+	  	<version>2.6</version>
+	  	<configuration>
+	  	<failOnMissingWebXml>false</failOnMissingWebXml></configuration>
+	  </plugin>
+	  
+	      <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>2.1.0.Beta1</version>
+            </plugin>
+  </plugins>
+  </build>
+  
+  <properties>
+  	<maven.compiler.source>1.7</maven.compiler.source>
+	<maven.compiler.target>1.7</maven.compiler.target>
+  	<project.build.sourceEnconding>UTF-8</project.build.sourceEnconding>
+  </properties>
+
+  
+  <dependencies>
+	<!-- https://mvnrepository.com/artifact/org.jboss.spec/jboss-javaee-6.0 -->
+	<dependency>
+	    <groupId>org.jboss.spec</groupId>
+	    <artifactId>jboss-javaee-6.0</artifactId>
+	    <version>1.0.0.Final</version>
+	    <type>pom</type>
+	    <scope>provided</scope>
+	</dependency>
+	
+<dependency>
+    <groupId>org.primefaces</groupId>
+    <artifactId>primefaces</artifactId>
+    <version>7.0</version>
+</dependency>
+		
+	<dependency>
+	  <groupId>org.hibernate</groupId>
+	  <artifactId>hibernate-core</artifactId>
+	  <version>4.2.21.Final</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.hibernate.javax.persistence</groupId>
+	    <artifactId>hibernate-jpa-2.0-api</artifactId>
+	    <version>1.0.1.Final</version>
+	</dependency>
+
+	<dependency>
+	    <groupId>javax.faces</groupId>
+	    <artifactId>jsf-api</artifactId>
+	    <version>2.1</version>
+	    <scope>provided</scope>
+	</dependency>
+	
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.8.2</version>
+		<scope>test</scope>
+	</dependency>
+	
+	
+  </dependencies>
+</project>

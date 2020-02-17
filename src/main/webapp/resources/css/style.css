@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+
+.ui-state-hover {
+    background: rgb(194, 217, 186) !important;
+}
+
+.ui-panel-titlebar {
+    background: rgb(109, 217, 132) !important;
+}
+
+.bodyStyle {
+	background-image: url('resources/images/background.jpg');
+  	background-repeat: no-repeat;
+  	background-position: right top;
+  	background-attachment: fixed;
+}

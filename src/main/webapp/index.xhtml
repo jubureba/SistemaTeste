@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<h:outputScript library="js" name="primefaces_i8n.js" />
+
+	<h:outputStylesheet library="css" name="style.css" />
+	<title>Sistema</title>
+
+</h:head>
+<h:body styleClass="bodyStyle">
+	<h:form id="formTable">
+		<p:growl id="msgs" showDetail="true" life="5000" />
+		<p:panel>
+			<f:facet name="header">
+				<span class="fa fa-black-tie"></span>  Listar Tipos de Documentos
+            </f:facet>
+
+
+			<p:commandButton id="btnIncluir" icon="fa fa-plus" value="Incluir"
+				type="button" onclick="PF('modalNewItem').show();" />
+			<p:tooltip position="top" for="btnIncluir"
+				value="Cadastrar Novo Item" />
+
+			<p:commandButton id="btnHelp" icon="fa fa-question-circle"
+				type="button" onclick="PF('modalHelp').show();" />
+			<p:tooltip position="top" for="btnHelp" value="Ajuda" />
+
+
+			<p:separator
+				style="width: 100%; opacity: .4; position: relative;  margin: 15px 0 20px 0; border-top: 1px dashed #8c8b8b;" />
+
+			<p:dataTable var="d" value="#{document.list}" widgetVar="table"
+				paginator="true" rows="5"
+				currentPageReportTemplate="({startRecord}/{endRecord}) | páginas:{currentPage}/{totalPages} | Total de Registros:{totalRecords}"
+				paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				paginatorPosition="bottom" rowsPerPageTemplate="5,10,20" id="tb01"
+				scrollable="true" scrollHeight="350"
+				emptyMessage="Nenhum registro encontrado.">
+
+				<f:facet name="header">
+					<div class="search">
+						<div class="ui-inputgroup">
+							<p:inputText placeholder="Pesquisar:"
+								onkeyup="PF('table').filter()" id="globalFilter" />
+							<p:commandButton icon="fa fa-search" />
+						</div>
+					</div>
+				</f:facet>
+
+				<p:column filterBy="#{d.idDoc}"
+					style="width:50px; max-width: 50px; font-size: 10pt;"
+					filterMatchMode="contains">
+					<f:facet name="header">Id</f:facet>
+					<p:outputLabel value="#{d.idDoc}" />
+				</p:column>
+
+				<p:column filterBy="#{d.nome}" style="width:auto; font-size: 10pt;"
+					filterMatchMode="contains">
+					<f:facet name="header">Nome</f:facet>
+					<p:outputLabel value="#{d.nome}" />
+				</p:column>
+
+				<p:column filterBy="#{d.descricao}"
+					style="width:auto; font-size: 10pt;" filterMatchMode="contains">
+					<f:facet name="header">Descricao</f:facet>
+					<p:outputLabel value="#{d.descricao}" />
+				</p:column>
+
+				<p:column filterBy="#{d.situacao}"
+					style="width:auto; font-size: 10pt;" filterMatchMode="contains">
+					<f:facet name="header">Situação</f:facet>
+					<p:outputLabel value="#{d.situacao}" />
+				</p:column>
+
+				<!--
+		        ********************
+		        BUTTONS VIEW, EDIT, DELETE  
+		        ********************        
+		        -->
+				<p:column
+					style="width:auto; max-width: 120px; text-align: center; font-size: 10pt;">
+					<f:facet name="header">Ações</f:facet>
+
+					<p:commandButton icon="fa fa-search"
+						update=":formTable:detailsItem" id="btnView" styleClass="btnAcoes"
+						oncomplete="PF('detailsItem').show();">
+						<f:setPropertyActionListener value="#{d}" target="#{document.doc}"  />
+					</p:commandButton>
+					<p:tooltip position="top" for="btnView" value="Visualizar" />
+
+
+					<p:commandButton icon="fa fa-edit" id="btnEdit"
+						update="modalEditItem" styleClass="btnAcoes"
+						oncomplete="PF('modalEditItem').show();">
+						
+						<f:setPropertyActionListener value="#{d}" target="#{document.doc}"  for="modalEditItem"/>
+					</p:commandButton>
+					<p:tooltip position="top" for="btnEdit" value="Editar" />
+
+
+					<p:commandButton icon="fa fa-trash" id="btnDel"
+						styleClass="btnAcoes" validateClient="true" ajax="true"
+						update="formTable:tb01 formTable:msgs"
+						action="#{document.delete(d.idDoc)}">
+						<p:confirm header="Confirmação"
+							message="Confirma a exclusão do registro?"
+							icon="fa fa-exclamation-triangle" />
+					</p:commandButton>
+
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Sim" type="button"
+							styleClass="btn-back ui-confirmdialog-yes" icon="fa fa-thumbs-up" />
+						<p:commandButton value="Não" type="button"
+							styleClass="btn-back ui-confirmdialog-no"
+							icon="fa fa-thumbs-down" />
+					</p:confirmDialog>
+					<p:tooltip position="top" for="btnDel" value="Deletar" />
+				</p:column>
+
+				<!--
+		        ********************
+		        FIM BUTTONS VIEW, EDIT, DELETE  
+		        ********************        
+		        -->
+			</p:dataTable>
+
+			<f:facet name="footer">
+				<p:outputLabel>Desenvolvido por Anderson Thiago - teste pscs | 2020</p:outputLabel>
+			</f:facet>
+
+		</p:panel>
+
+		<!--
+        ********************
+        MODAL DETAILS ITEM  
+        ********************        
+        -->
+
+		<p:dialog widgetVar="detailsItem" showEffect="fade" hideEffect="fade"
+			styleClass="modal-dialog" header="Detalhes" appendTo="@(body)"
+			closable="true" resizable="false" responsive="true" modal="true"
+			height="auto">
+			<p:outputPanel id="detailsItem" rendered="#{not empty document.doc}"
+				style="text-align:center;">
+				<p:panelGrid columns="2" columnClasses="label,value">
+					<h:outputText value="Id:" />
+					<h:outputText value="#{document.doc.idDoc}" />
+
+					<h:outputText value="Nome:" />
+					<h:outputText value="#{document.doc.nome}" />
+
+					<h:outputText value="Descrição: " />
+					<h:outputText value="#{document.doc.descricao}" />
+
+					<h:outputText value="Situação:" />
+					<h:outputText value="#{document.doc.situacao}" />
+
+				</p:panelGrid>
+			</p:outputPanel>
+			<f:facet name="header">
+				<h:form>
+					<p:commandButton styleClass="btn-back" value="« voltar"
+						onclick="PF('detailsItem').hide();" action="#{document.init}">
+
+					</p:commandButton>
+					<p:outputLabel value="Detalhes" />
+				</h:form>
+			</f:facet>
+		</p:dialog>
+
+		<!--
+        ********************
+        FIM MODAL DETAILS ITEM  
+        ********************        
+        -->
+
+
+
+
+	</h:form>
+
+
+	<!--  MODALS NEW ITEM / ALTER ITEM  -->
+
+	<p:dialog id="modalNewItem" showEffect="fade" hideEffect="fade"
+		styleClass="modal-dialog" header="Adicionar" widgetVar="modalNewItem"
+		appendTo="@(body)" closable="false" resizable="false"
+		responsive="true" modal="true" height="auto">
+		<ui:include src="/incluir.xhtml" />
+		<f:facet name="header">
+			<h:form>
+				<p:commandButton update="formTable:tb01" value="« voltar"
+					onclick="PF('modalNewItem').hide();">
+					<p:ajax update="modalNewItem" resetValues="true" />
+				</p:commandButton>
+				<p:outputLabel value=" | Adicionar " />
+			</h:form>
+		</f:facet>
+	</p:dialog>
+
+	<p:dialog id="modalEditItem" showEffect="fade" hideEffect="fade"
+		styleClass="modal-dialog" header="Editar Usuário"
+		widgetVar="modalEditItem" appendTo="@(body)" closable="false"
+		resizable="false" responsive="true" modal="true" height="auto">
+		<p:outputPanel id="editItem">
+			<ui:include src="/alterar.xhtml" />
+
+		</p:outputPanel>
+		<f:facet name="header">
+			<h:form>
+				<p:commandButton update="formTable:tb01" styleClass="btn-back"
+					value="« voltar" onclick="PF('modalEditItem').hide();">
+					<p:ajax update="formEdit" resetValues="true" />
+				</p:commandButton>
+				<p:outputLabel value=" | Editar " />
+			</h:form>
+		</f:facet>
+	</p:dialog>
+
+
+	<p:dialog id="modalHelp" showEffect="fade" hideEffect="fade"
+		styleClass="modal-dialog" header="Ajuda"
+		widgetVar="modalHelp" appendTo="@(body)" closable="false"
+		resizable="false" responsive="true" modal="true" height="auto">
+
+		<f:facet name="header">
+			<h:form>
+				<p:commandButton value="« voltar" onclick="PF('modalHelp').hide();" />
+				<p:outputLabel value=" | Ajuda" />
+
+			</h:form>
+
+		</f:facet>
+			<p:accordionPanel>
+				<p:tab title="Cadastrar Novo Item">
+					<h:panelGrid columns="2" cellpadding="10">
+						<p:graphicImage name="images/incluir.jpg" library="resources" />
+						<h:outputText
+							value="Para incluir um novo registro, na tela inicial do sistema, clique em 'incluir', e será aberta uma nova janela.
+							A janela aberta, deverá ser preenchida com Nome, Descrição e Situação.
+							Todos os campos são obrigatórios, lembre-se de preenchê-los antes de clicar em Salvar.
+							O campo nome aceita 40 digitos em alfanumérico, equando descrição aceita 100.
+							Situação é preenchida por default como inativo, podendo ser alterado.
+							Por fim, clique em salvar, se a operação for concluida, a mensagem de sucesso será exibida." />	
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Visualizar, Editar e Excluir Item">
+					<h:panelGrid columns="2" cellpadding="10">
+						<p:graphicImage name="images/btnAcoes.jpg" library="resources" title="imagem01" alt="imagem01" />
+						<p:graphicImage name="images/confExcluir.jpg" library="resources" />
+						<h:outputText
+							value="Para Visualizar, Editar e Excluir (Botões Respectivos na imagem01), clique em seus respectivos botões no item selecionado.
+							Na visualização, você verá detalhes dos itens, e não poderá editá-lo.
+							Na edição, você podera alterar todos os valores previamente cadastrado daquele item, substitua os valores e clique em Editar.
+							Na exclusão, será mostrado uma confirmação da ação (Mostrado na imagem02), caso confirme o registro será apagado (essa ação não pode ser desfeita), caso cancele, o sistema volta a tela inicial." />
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Pesquisa">
+					<h:panelGrid columns="2" cellpadding="10">
+						<p:graphicImage name="images/search.jpg" library="resources" />
+						<h:outputText
+							value="Para pesquisar, use os campos de pesquisa localizado a cima da tabela para filtrar por qualquer valor. Para uma pesquisa mais específica,
+							utilize o campo de busca abaixo do titulo da coluna, para filtrar somente por valores daquela coluna." />
+					</h:panelGrid>
+				</p:tab>
+			</p:accordionPanel>
+	</p:dialog>
+
+
+</h:body>
+</html>
